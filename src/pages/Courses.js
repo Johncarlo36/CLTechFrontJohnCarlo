@@ -9,10 +9,12 @@ export default function Courses() {
     const { user } = useContext(UserContext);
     const [courses, setCourses] = useState([]);
 
+    const API = process.env.REACT_APP_API_URL;
+
     const fetchData = () => {
         const fetchUrl = user.isAdmin 
-            ? "http://localhost:4000/courses/all" 
-            : "http://localhost:4000/courses/";
+            ? `${API}/courses/all` 
+            : `${API}/courses/`;
 
         fetch(fetchUrl, {
             headers: {
@@ -22,6 +24,9 @@ export default function Courses() {
         .then(res => res.json())
         .then(data => {
             setCourses(data);
+        })
+        .catch(err => {
+            console.error("❌ Error fetching courses:", err);
         });
     };
 
