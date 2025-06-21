@@ -12,8 +12,13 @@ export default function Register() {
 
 	useEffect(() => {
 		if (
-			firstName && lastName && email && mobileNo && password && confirmPassword &&
-			mobileNo.length === 11 && password === confirmPassword
+			firstName &&
+			lastName &&
+			email &&
+			mobileNo.length === 11 &&
+			password &&
+			confirmPassword &&
+			password === confirmPassword
 		) {
 			setIsActive(true);
 		} else {
@@ -24,9 +29,9 @@ export default function Register() {
 	function registerUser(e) {
 		e.preventDefault();
 
-		fetch('http://localhost:4000/users/register', {
+		fetch('https://cltechbackjohncarlo-1.onrender.com/users/register', {
 			method: 'POST',
-			headers: { 'Content-Type': "application/json" },
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				firstName,
 				lastName,
@@ -38,16 +43,20 @@ export default function Register() {
 		.then(res => res.json())
 		.then(data => {
 			if (data.message === 'User registered successfully') {
-				setFirstName("");
-				setLastName("");
-				setEmail("");
-				setMobileNo("");
-				setPassword("");
-				setConfirmPassword("");
-				alert("Registration Successful");
+				alert('Registration Successful');
+				setFirstName('');
+				setLastName('');
+				setEmail('');
+				setMobileNo('');
+				setPassword('');
+				setConfirmPassword('');
 			} else {
-				alert(data.message);
+				alert(data.message || 'Registration failed.');
 			}
+		})
+		.catch(err => {
+			console.error('Registration error:', err);
+			alert('Something went wrong while registering.');
 		});
 	}
 

@@ -12,35 +12,42 @@ export default function Login() {
 	function authenticate(e) {
 		e.preventDefault();
 
-		fetch('http://localhost:4000/users/login', {
+		fetch('https://cltechbackjohncarlo-1.onrender.com/users/login', {
 			method: 'POST',
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ email, password })
 		})
-		.then(res => res.json())
-		.then(data => {
-			if (data.access !== undefined) {
-				localStorage.setItem('token', data.access);
-				retrieveUserDetails(data.access);
-				setEmail('');
-				setPassword('');
-				alert(`You are now logged in`);
-			} else if (data.message === "Incorrect email or password") {
-				alert("Incorrect email or password");
-			} else {
-				alert(`${email} does not exist`);
-			}
-		});
+			.then(res => res.json())
+			.then(data => {
+				if (data.access !== undefined) {
+					localStorage.setItem('token', data.access);
+					retrieveUserDetails(data.access);
+					setEmail('');
+					setPassword('');
+					alert(`You are now logged in`);
+				} else if (data.message === "Incorrect email or password") {
+					alert("Incorrect email or password");
+				} else {
+					alert(`${email} does not exist`);
+				}
+			})
+			.catch(err => {
+				console.error("Login error:", err);
+				alert("Something went wrong during login.");
+			});
 	}
 
 	function retrieveUserDetails(token) {
-		fetch('http://localhost:4000/users/details', {
+		fetch('https://cltechbackjohncarlo-1.onrender.com/users/details', {
 			headers: { Authorization: `Bearer ${token}` }
 		})
-		.then(res => res.json())
-		.then(data => {
-			setUser({ id: data._id, isAdmin: data.isAdmin });
-		});
+			.then(res => res.json())
+			.then(data => {
+				setUser({ id: data._id, isAdmin: data.isAdmin });
+			})
+			.catch(err => {
+				console.error("User details fetch error:", err);
+			});
 	}
 
 	useEffect(() => {
